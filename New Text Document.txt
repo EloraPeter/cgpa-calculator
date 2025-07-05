@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>CGPA Calculator</h2>
+        <div id="step1">
+            <label>How many semesters?</label>
+            <input type="number" id="numSemesters" min="1">
+            <button onclick="startCalculation()">Next</button>
+        </div>
+        
+        <div id="step2" class="hidden">
+            <h3>Semester <span id="currentSemester">1</span></h3>
+            <label>Number of courses:</label>
+            <input type="number" id="numCourses" min="1">
+            <button onclick="nextSemester()">Next</button>
+        </div>
+        
+        <div id="step3" class="hidden">
+            <div id="coursesContainer"></div>
+            <button onclick="calculateSemesterGPA()">Calculate GPA</button>
+        </div>
+        
+        <div id="result" class="hidden">
+            <h3 id="cgpaResult"></h3>
+            <div id="gpaResults"></div>
+            <button onclick="resetCalculator()">Restart</button>
+        </div>
+    </div>
+
+    <script>
+        let numSemesters, currentSemester = 1, totalGPA = 0;
+        let gpaList = [];
+        const gradePointsMap = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 };
+
+        function startCalculation() {
+            numSemesters = Number(document.getElementById("numSemesters").value);
+            if (numSemesters > 0) {
+                document.getElementById("step1").classList.add("hidden");
+                document.getElementById("step2").classList.remove("hidden");
+            }
+        }
+
+        function nextSemester() {
+            let numCourses = Number(document.getElementById("numCourses").value);
+            if (numCourses > 0) {
+                document.getElementById("step2").classList.add("hidden");
+                document.getElementById("step3").classList.remove("hidden");
+                let container = document.getElementById("coursesContainer");
+                container.innerHTML = "";
+                for (let i = 1; i <= numCourses; i++) {
+                    container.innerHTML += `<label>Course ${i} Grade:</label>
+                                           <select class="gradePoint">
+                                               <option value="5">A</option>
+                                               <option value="4">B</option>
+                                               <option value="3">C</option>
+                                               <option value="2">D</option>
+                                               <option value="1">E</option>
+                                               <option value="0">F</option>
+                                           </select>
+                                           <label>Course ${i} Credit Unit:</label>
+                                           <input type="number" class="creditUnit" min="1">`;
+                }
+            }
+        }
+
+        function calculateSemesterGPA() {
+            let gradePoints = document.querySelectorAll(".gradePoint");
+            let creditUnits = document.querySelectorAll(".creditUnit");
+            let totalGradePoints = 0, totalCreditUnits = 0;
+            
+            for (let i = 0; i < gradePoints.length; i++) {
+                let gradePoint = Number(gradePoints[i].value);
+                let creditUnit = Number(creditUnits[i].value);
+                totalGradePoints += gradePoint * creditUnit;
+                totalCreditUnits += creditUnit;
+            }
+            
+            let gpa = totalGradePoints / totalCreditUnits;
+            gpaList.push(`Semester ${currentSemester} GPA: ${gpa.toFixed(2)}`);
+            totalGPA += gpa;
+            
+            if (currentSemester < numSemesters) {
+                currentSemester++;
+                document.getElementById("currentSemester").textContent = currentSemester;
+                document.getElementById("step3").classList.add("hidden");
+                document.getElementById("step2").classList.remove("hidden");
+            } else {
+                let cgpa = totalGPA / numSemesters;
+                document.getElementById("cgpaResult").textContent = `Your CGPA is: ${cgpa.toFixed(2)}`;
+                document.getElementById("gpaResults").innerHTML = gpaList.join("<br>");
+                document.getElementById("step3").classList.add("hidden");
+                document.getElementById("result").classList.remove("hidden");
+            }
+        }
+
+        function resetCalculator() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

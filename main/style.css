@@ -1,0 +1,70 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.container {
+    transition: all 0.3s ease-in-out;
+    transform: scale(1);
+}
+
+.container:hover {
+    transform: scale(1.02);
+}
+
+input, select, button {
+    transition: all 0.2s ease-in-out;
+}
+
+button {
+    transform: translateY(0);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+input:invalid, select:invalid {
+    border-color: #ef4444;
+    animation: shake 0.3s ease-in-out;
+}
+
+.error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+#progressBar {
+    width: 0%;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.group:hover .tooltip {
+    display: block;
+}
+
+.tooltip {
+    z-index: 10;
+    width: 200px;
+    transform: translateX(-50%);
+    left: 50%;
+}
